@@ -42,7 +42,7 @@ do
     total_suite_count=$(echo $result | jq '. | length')
 
     x=0
-    while [ $x -le $(( $total_suite_count - 1 )) ]
+    while [ $x -le $total_suite_count ]
     do
       echo $x
 
