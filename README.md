@@ -40,7 +40,6 @@ jobs:
           echo ${{ steps.endtest_functional_tests.outputs.screenshots_and_video }}
           echo ${{ steps.endtest_functional_tests.outputs.hash }}
           echo ${{ steps.endtest_functional_tests.outputs.results }}
-     
 ```
 
 ### Environment variables
