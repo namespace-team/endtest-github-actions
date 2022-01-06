@@ -41,7 +41,7 @@ do
     x=0
     while [ $x -le $(( $total_suite_count - 1 )) ]
     do
-      echo $x
+      echo -e "\n\n\n$x test suites completed!\n\n\n"
 
       testsuitename=$( echo $result | jq ".[$x].test_suite_name" )
       configuration=$( echo $result | jq ".[$x].configuration" )
@@ -67,21 +67,6 @@ do
       echo End Time: $endtime
       echo Hash: $suite_hash
       echo Results: $results
-
-      echo ::set-output name=test_suite_name::$( echo $testsuitename )
-      echo ::set-output name=configuration::$( echo $configuration )
-      echo ::set-output name=test_cases::$( echo $testcases )
-      echo ::set-output name=passed::$( echo $passed )
-      echo ::set-output name=failed::$( echo $failed )
-      echo ::set-output name=errors::$( echo $errors )
-      echo ::set-output name=start_time::$( echo $starttime )
-      echo ::set-output name=end_time::$( echo $endtime )
-      # echo ::set-output name=detailed_logs::$( echo $detailedlogs )
-      echo ::set-output name=screenshots_and_video::$( echo $screenshotsandvideo )
-      echo ::set-output name=hash::$( echo $hash )
-      echo ::set-output name=results::$( echo $results )
-
-      echo -e "\n\n"
 
       x=$(( $x + 1 ))
     done
