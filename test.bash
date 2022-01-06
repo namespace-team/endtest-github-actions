@@ -9,7 +9,7 @@ echo "Hash: $hash"
 
 while :
 do
-  sleep 5
+  sleep 20
   result=$(curl -X GET --header "Accept: */*" "https://endtest.io/api.php?action=getResults&appId={$1}&appCode=${2}&hash=${hash}&format=json")
 
   if [ $(echo $result | jq 'map(select(. == "Test is still running.")) | length') -gt 0 ]
@@ -36,9 +36,6 @@ do
     echo "empty result"
     # Don't print anything
   else
-    echo -e "\n\n\n\n\nPASSED\n\n\n\n"
-    echo -e "\n\n\n\n\nFirst execution completed\n\n\n"
-
     total_suite_count=$(echo $result | jq '. | length')
 
     x=0
