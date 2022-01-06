@@ -39,9 +39,10 @@ do
     total_suite_count=$(echo $result | jq '. | length')
 
     x=0
+    pass=true
     while [ $x -le $(( $total_suite_count - 1 )) ]
     do
-      echo -e "\n\n\n$x test suites completed!\n\n\n"
+      echo -e "\n\n$(( $x + 1 )) test suites result:\n"
 
       testsuitename=$( echo $result | jq ".[$x].test_suite_name" )
       configuration=$( echo $result | jq ".[$x].configuration" )
@@ -68,9 +69,22 @@ do
       echo Hash: $suite_hash
       echo Results: $results
 
+      # set terminal status based on failed or passed results
+      if [ $(echo $result | jq -r ".[$x].failed") -ne 0 ]
+      then
+        pass=false
+      fi
+
       x=$(( $x + 1 ))
     done
-    exit 0
+
+    if [ $pass == true ]; then
+      tput setaf 2; echo "All test cases successfully passed."
+      exit 0
+    fi
+
+    tput setaf 1; echo "One or more test cases failed."
+    exit 1
   fi
 done
 exit
