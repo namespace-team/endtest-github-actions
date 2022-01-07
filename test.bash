@@ -79,11 +79,11 @@ do
     done
 
     if [ $pass == true ]; then
-      tput setaf 2; echo -e "\nAll test cases successfully passed."
+      tput setaf 2; echo "All test cases successfully passed."
       exit 0
     fi
 
-    tput setaf 1; echo -e "\nOne or more test cases failed."
+    tput setaf 1; echo "One or more test cases failed."
     exit 1
   fi
 done
