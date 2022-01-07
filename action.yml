@@ -55,9 +55,9 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - run: sudo apt-get install jq
-      shell: bash
     - run: sudo chmod +x ${{ github.action_path }}/test.bash
+      shell: bash
+    - run: echo "TERM=xterm-256color" >> $GITHUB_ENV
       shell: bash
     - id: endtest_functional_tests
       run: ${{ github.action_path }}/test.bash ${{ inputs.app_id }} ${{ inputs.app_code }} "${{ inputs.api_request }}"

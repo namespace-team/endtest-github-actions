@@ -9,7 +9,7 @@ echo "Hash: $hash"
 
 while :
 do
-  sleep 5
+  sleep 15
   result=$(curl -X GET --header "Accept: */*" "https://endtest.io/api.php?action=getResults&appId={$1}&appCode=${2}&hash=${hash}&format=json")
 
   if [ $(echo $result | jq 'map(select(. == "Test is still running.")) | length') -gt 0 ]
@@ -36,15 +36,13 @@ do
     echo "empty result"
     # Don't print anything
   else
-    echo -e "\n\n\n\n\nPASSED\n\n\n\n"
-    echo -e "\n\n\n\n\nFirst execution completed\n\n\n"
-
     total_suite_count=$(echo $result | jq '. | length')
 
     x=0
+    pass=true
     while [ $x -le $(( $total_suite_count - 1 )) ]
     do
-      echo $x
+      echo -e "\n\nTest suite result for $(( $x + 1 )):\n"
 
       testsuitename=$( echo $result | jq ".[$x].test_suite_name" )
       configuration=$( echo $result | jq ".[$x].configuration" )
@@ -71,24 +69,22 @@ do
       echo Hash: $suite_hash
       echo Results: $results
 
-      echo ::set-output name=test_suite_name::$( echo $testsuitename )
-      echo ::set-output name=configuration::$( echo $configuration )
-      echo ::set-output name=test_cases::$( echo $testcases )
-      echo ::set-output name=passed::$( echo $passed )
-      echo ::set-output name=failed::$( echo $failed )
-      echo ::set-output name=errors::$( echo $errors )
-      echo ::set-output name=start_time::$( echo $starttime )
-      echo ::set-output name=end_time::$( echo $endtime )
-      # echo ::set-output name=detailed_logs::$( echo $detailedlogs )
-      echo ::set-output name=screenshots_and_video::$( echo $screenshotsandvideo )
-      echo ::set-output name=hash::$( echo $hash )
-      echo ::set-output name=results::$( echo $results )
-
-      echo -e "\n\n"
+      # set terminal status based on failed or passed results
+      if [ $(echo $result | jq -r ".[$x].failed") -ne 0 ]
+      then
+        pass=false
+      fi
 
       x=$(( $x + 1 ))
-      exit 0
     done
+
+    if [ $pass == true ]; then
+      tput setaf 2; echo -e "\nAll test cases successfully passed."
+      exit 0
+    fi
+
+    tput setaf 1; echo -e "\nOne or more test cases failed."
+    exit 1
   fi
 done
 exit
