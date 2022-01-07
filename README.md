@@ -10,45 +10,31 @@ on: [push]
 name: endtest
 
 jobs:
-  test:
-    name: Endtest Functional Test
+  endtest:
+    name: Endtest runner
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2
 
-      - name: Functional test deployment
-        id: endtest_functional_tests
-        uses: namespace-team/endtest-github-actions@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout endtest actions repo
+        uses: actions/checkout@v2
         with:
-          app_id: <your-endtest-app-id>
-          app_code: <your-endtest-app-code>
-          api_request: <your-endtest-api-request-for-starting-a-test-execution>
-          
-      - name: Use the outputs from test execution in a different step
-        run: |
-          echo ${{ steps.endtest_functional_tests.outputs.test_suite_name }}
-          echo ${{ steps.endtest_functional_tests.outputs.configuration }}
-          echo ${{ steps.endtest_functional_tests.outputs.test_cases }}
-          echo ${{ steps.endtest_functional_tests.outputs.passed }}
-          echo ${{ steps.endtest_functional_tests.outputs.failed }}
-          echo ${{ steps.endtest_functional_tests.outputs.errors }}
-          echo ${{ steps.endtest_functional_tests.outputs.start_time }}
-          echo ${{ steps.endtest_functional_tests.outputs.end_time }}
-          echo ${{ steps.endtest_functional_tests.outputs.detailed_logs }}
-          echo ${{ steps.endtest_functional_tests.outputs.screenshots_and_video }}
-          echo ${{ steps.endtest_functional_tests.outputs.hash }}
-          echo ${{ steps.endtest_functional_tests.outputs.results }}
+          repository: namespace-team/endtest-github-actions
+          token: ${{ secrets.ENDTEST_REPO_ACCESS_TOKEN }}
+          ref: feature/endtest-script
+
+      - name: Run Endtest functional tests
+        id: endtest_functional_tests
+        uses: ./
+        with:
+          app_id: ${{ secrets.ENDTEST_APP_ID }}
+          app_code: ${{ secrets.ENDTEST_APP_CODE }}
+          api_request: ${{ secrets.ENDTEST_API_REQUEST }}
 ```
 
 ### Environment variables
 
-- `GITHUB_TOKEN` {string} (optional) - The Github token for your repository. If
-  provided, the Endtest action will associate a pull request with the deployment if
-  the commit being built is associated with any pull requests. This token is
-  automatically available as a secret in your repo but must be passed in
-  explicitly in order for the action to be able to access it.
+- `ENDTEST_REPO_ACCESS_TOKEN` {string} - The token which clone access to this repo.
 
 ### Inputs
 
