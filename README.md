@@ -21,7 +21,7 @@ jobs:
         with:
           repository: namespace-team/endtest-github-actions
           token: ${{ secrets.ENDTEST_REPO_ACCESS_TOKEN }}
-          ref: feature/endtest-script
+          ref: refs/tags/v1.0.0
 
       - name: Run Endtest functional tests
         id: endtest_functional_tests
