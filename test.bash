@@ -1,6 +1,5 @@
 #!/bin/bash
 set -e
-TERM=xterm-256color
 
 hash=$(curl -X GET --header "Accept: */*" "${3}")
 
