@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+TERM=xterm-256color
 
 hash=$(curl -X GET --header "Accept: */*" "${3}")
 
@@ -42,7 +43,7 @@ do
     pass=true
     while [ $x -le $(( $total_suite_count - 1 )) ]
     do
-      echo -e "\n\n$(( $x + 1 )) test suites result:\n"
+      echo -e "\n\nTest suite result for $(( $x + 1 )):\n"
 
       testsuitename=$( echo $result | jq ".[$x].test_suite_name" )
       configuration=$( echo $result | jq ".[$x].configuration" )
